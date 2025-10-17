@@ -29,6 +29,26 @@ async function run() {
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+    const taskCollection = client.db('taskManager').collection('tasks');
+    const userCollection = client.db('taskManager').collection('users');
+    const noteCollection = client.db('taskManager').collection('notes');
+
+    // store and manage users data
+    app.get('/user/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { 'userInfo.email': email };
+      const user = await userCollection.findOne(query);
+      const sendData = { name: user.userInfo.name, photo: user.userInfo.photo };
+      res.send(sendData);
+    });
+
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      console.log(user);
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();

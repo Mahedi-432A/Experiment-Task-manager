@@ -5,6 +5,21 @@ import { Link } from "react-router";
 const Navbar = () => {
   const { user, logout } = useAuth();
 
+  const email = user?.email;
+  const [name, setName] = React.useState("");
+  const [photo, setPhoto] = React.useState("");
+
+  fetch(`http://localhost:5000/user/${email}`)
+    .then((res) => res.json())
+    .then((data) => {
+      // console.log("fetch from navbar", data);
+      setName(data.name);
+      setPhoto(data.photo);
+    })
+    .catch((error) => {
+      console.error("Error fetching user data:", error);
+    });
+
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="navbar-start">
@@ -69,7 +84,7 @@ const Navbar = () => {
             <div className="w-10 rounded-full">
               <img
                 alt="Tailwind CSS Navbar component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                src={photo}
               />
             </div>
           </div>
@@ -78,13 +93,13 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
             <li>
-              <a className="justify-between">
+              <p>
                 {user.email}
                 {/* <span className="badge">New</span> */}
-              </a>
+              </p>
             </li>
             <li>
-              {/* <a>Settings</a> */}
+              <p>{name}</p>
             </li>
             <li>
               <a onClick={() => logout()}>Logout</a>
