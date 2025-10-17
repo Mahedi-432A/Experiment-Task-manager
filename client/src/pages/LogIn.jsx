@@ -14,7 +14,15 @@ const LogIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(email, password);
+      await login(email, password)
+      .then((response) => {
+        const user = response.user;
+        console.log("User logged in:", user);
+      })
+      .catch((error) => {
+        console.error("Error during login:", error);
+        throw error;
+      });
       navigate(from, { replace: true }); // পূর্বের পেজে ফিরিয়ে দাও
     } catch (err) {
       console.error(err);

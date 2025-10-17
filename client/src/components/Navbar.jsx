@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../contexts/AuthProvider";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -9,17 +10,20 @@ const Navbar = () => {
   const [name, setName] = React.useState("");
   const [photo, setPhoto] = React.useState("");
 
-  fetch(`http://localhost:5000/user/${email}`)
-    .then((res) => res.json())
-    .then((data) => {
-      // console.log("fetch from navbar", data);
-      setName(data.name);
-      setPhoto(data.photo);
-    })
-    .catch((error) => {
-      console.error("Error fetching user data:", error);
-    });
-
+  useEffect (() => {
+    if (email) {
+      fetch(`http://localhost:5000/user/${email}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setName(data.name);
+          setPhoto(data.photo);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, [email]);
+  
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="navbar-start">
@@ -42,7 +46,7 @@ const Navbar = () => {
             </svg>
           </div>
           <ul
-            tabIndex="-1"
+            tabIndex={-1}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
             {user && (
@@ -52,6 +56,9 @@ const Navbar = () => {
                 </li>
                 <li>
                   <Link to="notes">Notes</Link>
+                </li>
+                <li>
+                  <Link to="addNotes">Add Notes</Link>
                 </li>
               </>
             )}
@@ -69,6 +76,9 @@ const Navbar = () => {
                 <li>
                   <Link to="notes">Notes</Link>
                 </li>
+                <li>
+                  <Link to="addNotes">Add Notes</Link>
+                </li>
               </>
             )}
         </ul>
@@ -84,7 +94,7 @@ const Navbar = () => {
             <div className="w-10 rounded-full">
               <img
                 alt="Tailwind CSS Navbar component"
-                src={photo}
+                src={photo || "https://i.ibb.co/4pDNDk1/avatar.png"}
               />
             </div>
           </div>

@@ -11,6 +11,7 @@ import Register from "./pages/Register.jsx";
 import AuthProvider from "./contexts/AuthProvider.jsx";
 import ProtectedLayout from "./layout/ProtectedLayout.jsx";
 import Dashboard from "./components/Dashboard.jsx";
+import AddNotes from "./pages/AddNotes.jsx";
 
 let router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ let router = createBrowserRouter([
         children: [
           { path: "/tasks", element: <Tasks></Tasks> },
           { path: "/notes", element: <Notes></Notes> },
+          { path: "/addNotes", element: <AddNotes></AddNotes>}
           // { path: "/dashboard", element: <Dashboard></Dashboard> }
         ],
       },
