@@ -67,7 +67,7 @@ async function run() {
 
     app.post('/notes', async (req, res) => {
       const note = req.body;
-      console.log(note);
+      // console.log(note);
       const result = await noteCollection.insertOne(note);
       res.send(result);
     });
@@ -84,7 +84,15 @@ async function run() {
       const option = { upsert: true };
       const result = await noteCollection.updateOne(filter, updateDoc, option);
       res.send(result);
-      console.log(updateDoc);
+      // console.log(updateDoc);
+
+      app.delete('/note/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await noteCollection.deleteOne(query);
+        res.send(result);
+      });
+
     });
   } finally {
     // Ensures that the client will close when you finish/error
