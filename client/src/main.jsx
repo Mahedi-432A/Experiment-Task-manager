@@ -5,13 +5,14 @@ import "./index.css";
 import App from "./App.jsx";
 import Home from "./pages/Home.jsx";
 import Tasks from "./pages/Tasks.jsx";
-import Notes from "./pages/notes.jsx";
+import Notes from "./pages/Notes.jsx";
 import LogIn from "./pages/LogIn.jsx";
 import Register from "./pages/Register.jsx";
 import AuthProvider from "./contexts/AuthProvider.jsx";
 import ProtectedLayout from "./layout/ProtectedLayout.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import AddNotes from "./pages/AddNotes.jsx";
+import UpdateNotes from "./pages/UpdateNotes.jsx";
 
 let router = createBrowserRouter([
   {
@@ -27,7 +28,8 @@ let router = createBrowserRouter([
         children: [
           { path: "/tasks", element: <Tasks></Tasks> },
           { path: "/notes", element: <Notes></Notes> },
-          { path: "/addNotes", element: <AddNotes></AddNotes>}
+          { path: "/addNotes", element: <AddNotes></AddNotes>},
+          { path: "/updateNote/:id", element: <UpdateNotes></UpdateNotes>},
           // { path: "/dashboard", element: <Dashboard></Dashboard> }
         ],
       },

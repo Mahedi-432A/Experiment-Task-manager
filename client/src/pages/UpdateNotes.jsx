@@ -1,75 +1,83 @@
-import { useState } from "react";
-import { useAuth } from "../contexts/AuthProvider";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-const AddNotes = () => {
-  const { user } = useAuth();
-  const email = user?.email;
+const UpdateNotes = () => {
+  const { id } = useParams();
 
-  const [formData, setFormData] = useState({
-    title: "",
-    date: new Date().toISOString().split("T")[0],
-    category: "",
-    content: "",
-    tags: "",
-    priority: "Medium",
-    reminder: "",
-    status: "Draft",
-    color: "#facc15", // Yellow
-  });
+  const navigate = useNavigate();
+  //   const [formData, setFormData] = useState({
+  //     title: "",
+  //     date: new Date().toISOString().split("T")[0],
+  //     category: "",
+  //     content: "",
+  //     tags: "",
+  //     priority: "Medium",
+  //     reminder: "",
+  //     status: "Draft",
+  //     color: "#facc15", // Yellow
+  //   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const [fetchedFormData, setFetchedFormData] = useState(null);
+
+//   console.log("Fetched Form Data:", fetchedFormData);
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/note/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        // Convert tags array to comma-separated string for the input field
+        const tagsString = data.tags ? data.tags.join(", ") : "";
+        const updatedData = { ...data, tags: tagsString };
+        setFetchedFormData(updatedData);
+        // console.log("Note data fetched for update:", data);
+      })
+      .catch((error) => {
+        console.error("Error fetching note data:", error);
+      });
+  }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const processedData = {
-      ...formData,
-      tags: formData.tags
+    const formData = new FormData(e.target);
+    const updatedNote = Object.fromEntries(formData.entries());
+    
+    if (updatedNote.tags) {
+      updatedNote.tags = updatedNote.tags
         .split(",")
         .map((tag) => tag.trim())
-        .filter((tag) => tag !== ""),
-    };
-    console.log("Form submitted:", processedData);
-    // এখানে তুমি formData ব্যাকএন্ডে পাঠাতে পারো
-    if (email) {
-      fetch("http://localhost:5000/notes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...processedData, userEmail: email }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("Server response:", data);
-          if (data.insertedId) {
-            alert("নোট সফলভাবে সংরক্ষণ হয়েছে!");
-            // ফর্ম রিসেট করা
-            setFormData({
-              title: "",
-              date: new Date().toISOString().split("T")[0],
-              category: "",
-              content: "",
-              tags: "",
-              priority: "Medium",
-              reminder: "",
-              status: "Draft",
-              color: "#facc15", // Yellow
-            });
-          }
-        })
-        .catch((error) => {
-          console.error("Error sending note to server:", error);
-        });
+        .filter((tag) => tag !== "");
     }
+
+    // console.log("Updated Note Data to be sent:", updatedNote);
+
+    fetch(`http://localhost:5000/note/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedNote),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log("Server response after update:", data);
+        if (data.modifiedCount) {
+          alert("নোট সফলভাবে আপডেট হয়েছে!");
+          navigate("/notes", { replace: true });
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating note on server:", error);
+      });
   };
+
+  // user loader here
+  if (!fetchedFormData) {
+    return <div>লোড হচ্ছে...</div>;
+  }
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-base-100 rounded-xl shadow-md">
-      <h2 className="text-2xl font-bold mb-6">📝 নতুন নোট যুক্ত করুন</h2>
+      <h2 className="text-2xl font-bold mb-6">📝 নোট আপডেট করুন</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title */}
         <div>
@@ -77,8 +85,7 @@ const AddNotes = () => {
           <input
             type="text"
             name="title"
-            value={formData.title}
-            onChange={handleChange}
+            defaultValue={fetchedFormData.title}
             className="input input-bordered w-full"
             placeholder="নোটের শিরোনাম লিখুন"
             required
@@ -91,8 +98,7 @@ const AddNotes = () => {
           <input
             type="date"
             name="date"
-            value={formData.date}
-            onChange={handleChange}
+            defaultValue={fetchedFormData.date}
             className="input input-bordered w-full"
           />
         </div>
@@ -103,8 +109,7 @@ const AddNotes = () => {
           <input
             type="text"
             name="category"
-            value={formData.category}
-            onChange={handleChange}
+            defaultValue={fetchedFormData.category}
             className="input input-bordered w-full"
             placeholder="যেমনঃ পড়াশোনা, কাজ, আইডিয়া"
           />
@@ -115,8 +120,7 @@ const AddNotes = () => {
           <label className="label">নোট</label>
           <textarea
             name="content"
-            value={formData.content}
-            onChange={handleChange}
+            defaultValue={fetchedFormData.content}
             className="textarea textarea-bordered w-full"
             placeholder="এখানে নোট লিখুন..."
             rows={5}
@@ -130,8 +134,7 @@ const AddNotes = () => {
           <input
             type="text"
             name="tags"
-            value={formData.tags}
-            onChange={handleChange}
+            defaultValue={fetchedFormData.tags}
             className="input input-bordered w-full"
             placeholder="idea, urgent, project-x"
           />
@@ -142,8 +145,7 @@ const AddNotes = () => {
           <label className="label">গুরুত্ব</label>
           <select
             name="priority"
-            value={formData.priority}
-            onChange={handleChange}
+            defaultValue={fetchedFormData.priority}
             className="select select-bordered w-full"
           >
             <option value="Low">Low</option>
@@ -158,8 +160,7 @@ const AddNotes = () => {
           <input
             type="datetime-local"
             name="reminder"
-            value={formData.reminder}
-            onChange={handleChange}
+            defaultValue={fetchedFormData.reminder}
             className="input input-bordered w-full"
           />
         </div>
@@ -169,8 +170,7 @@ const AddNotes = () => {
           <label className="label">অবস্থা</label>
           <select
             name="status"
-            value={formData.status}
-            onChange={handleChange}
+            defaultValue={fetchedFormData.status}
             className="select select-bordered w-full"
           >
             <option value="Draft">Draft</option>
@@ -181,12 +181,13 @@ const AddNotes = () => {
 
         {/* Color Label */}
         <div>
-          <label className="label">রঙ (Color Label): নোটস এর কালার সেট করুন:- </label>
+          <label className="label">
+            রঙ (Color Label): নোটস এর কালার সেট করুন:-{" "}
+          </label>
           <input
             type="color"
             name="color"
-            value={formData.color}
-            onChange={handleChange}
+            defaultValue={fetchedFormData.color}
             className="w-16 h-10 border-2 border-gray-300 rounded"
           />
         </div>
@@ -202,4 +203,4 @@ const AddNotes = () => {
   );
 };
 
-export default AddNotes;
+export default UpdateNotes;

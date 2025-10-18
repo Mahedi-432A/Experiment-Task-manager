@@ -1,5 +1,8 @@
+import { Link } from "react-router";
+
 const NoteCard = ({ note }) => {
   const {
+    _id,
     title,
     date,
     category,
@@ -21,9 +24,13 @@ const NoteCard = ({ note }) => {
 
   return (
     <div
-      className="bg-white rounded-lg shadow-md p-6 border-t-8 break-inside-avoid"
+      className="bg-white rounded-lg shadow-md p-6 pt-2 border-t-8 break-inside-avoid"
       style={{ borderTopColor: color }}
     >
+        <div className="flex justify-end items-start mb-3 gap-2">
+            <Link to={`/updateNote/${_id}`}><button className="cursor-pointer">📝</button></Link>
+            <button onClick={() => alert('fuck you!')} className="cursor-pointer">🗑️</button>
+        </div>
       <div className="flex justify-between items-start mb-2">
         <h3 className="text-xl font-bold text-gray-800">{title}</h3>
         <span

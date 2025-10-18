@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 // const bodyParser = require('body-parser');
 
@@ -58,11 +58,33 @@ async function run() {
       res.send(notes);
     });
 
+    app.get('/note/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const note = await noteCollection.findOne(query);
+      res.send(note);
+    });
+
     app.post('/notes', async (req, res) => {
       const note = req.body;
       console.log(note);
       const result = await noteCollection.insertOne(note);
       res.send(result);
+    });
+
+    app.put('/note/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedNote = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          ...updatedNote
+        },
+      };
+      const option = { upsert: true };
+      const result = await noteCollection.updateOne(filter, updateDoc, option);
+      res.send(result);
+      console.log(updateDoc);
     });
   } finally {
     // Ensures that the client will close when you finish/error
