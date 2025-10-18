@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const AddNotes = () => {
   const { user } = useAuth();
   const email = user?.email;
+  const Navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -59,6 +61,7 @@ const AddNotes = () => {
               status: "Draft",
               color: "#facc15", // Yellow
             });
+            Navigate("/notes", { replace: true });
           }
         })
         .catch((error) => {
