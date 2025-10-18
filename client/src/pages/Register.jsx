@@ -19,12 +19,12 @@ export default function Register() {
       await register(email, password)
         .then((response) => {
           const user = response.user;
-          console.log("User registered:", user);
+          // console.log("User registered:", user);
 
           const lastSignInTime = user.metadata.lastSignInTime;
 
           const userInfo = { name, email, photo, lastSignInTime };
-          console.log("User info to store:", userInfo);
+          // console.log("User info to store:", userInfo);
 
           // এখন সার্ভারে ইউজারের ডাটা পাঠানো যাক
           return fetch("http://localhost:5000/users", {
@@ -36,7 +36,10 @@ export default function Register() {
           })
             .then((res) => res.json())
             .then((data) => {
-              console.log("Server response:", data);
+              // console.log("Server response:", data);
+              if (data.insertedId) {
+                alert("রেজিস্টার সফল হয়েছে!");
+              }
             })
             .catch((serverError) => {
               console.error("Error sending user data to server:", serverError);

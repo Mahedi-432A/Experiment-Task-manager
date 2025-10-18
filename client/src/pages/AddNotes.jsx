@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useAuth } from "../contexts/AuthProvider";
 
 const AddNotes = () => {
+  const { user } = useAuth();
+  const email = user?.email;
+
   const [formData, setFormData] = useState({
     title: "",
     date: new Date().toISOString().split("T")[0],
@@ -11,29 +15,62 @@ const AddNotes = () => {
     reminder: "",
     status: "Draft",
     color: "#facc15", // Yellow
-    attachment: null,
   });
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    if (type === "file") {
-      setFormData({ ...formData, [name]: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+
+    const processedData = {
+      ...formData,
+      tags: formData.tags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag !== ""),
+    };
+    console.log("Form submitted:", processedData);
     // এখানে তুমি formData ব্যাকএন্ডে পাঠাতে পারো
+    if (email) {
+      fetch("http://localhost:5000/notes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...processedData, userEmail: email }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Server response:", data);
+          if (data.insertedId) {
+            alert("নোট সফলভাবে সংরক্ষণ হয়েছে!");
+            // ফর্ম রিসেট করা
+            setFormData({
+              title: "",
+              date: new Date().toISOString().split("T")[0],
+              category: "",
+              content: "",
+              tags: "",
+              priority: "Medium",
+              reminder: "",
+              status: "Draft",
+              color: "#facc15", // Yellow
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error sending note to server:", error);
+        });
+    }
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-base-100 rounded-xl shadow-md">
       <h2 className="text-2xl font-bold mb-6">📝 নতুন নোট যুক্ত করুন</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-
         {/* Title */}
         <div>
           <label className="label">শিরোনাম</label>
@@ -151,17 +188,6 @@ const AddNotes = () => {
             value={formData.color}
             onChange={handleChange}
             className="w-16 h-10 border-2 border-gray-300 rounded"
-          />
-        </div>
-
-        {/* Attachment */}
-        <div>
-          <label className="label">ফাইল সংযুক্তি</label>
-          <input
-            type="file"
-            name="attachment"
-            onChange={handleChange}
-            className="file-input file-input-bordered w-full"
           />
         </div>
 

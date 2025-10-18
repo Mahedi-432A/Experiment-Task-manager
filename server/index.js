@@ -49,6 +49,21 @@ async function run() {
       const result = await userCollection.insertOne(user);
       res.send(result);
     });
+
+    // store and manage notes data
+    app.get('/notes/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { userEmail: email };
+      const notes = await noteCollection.find(query).toArray();
+      res.send(notes);
+    });
+
+    app.post('/notes', async (req, res) => {
+      const note = req.body;
+      console.log(note);
+      const result = await noteCollection.insertOne(note);
+      res.send(result);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
