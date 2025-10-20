@@ -1,6 +1,6 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
-const NoteCard = ({ note }) => {
+const NoteCard = ({ note, notes, setNotes }) => {
   const {
     _id,
     title,
@@ -22,15 +22,46 @@ const NoteCard = ({ note }) => {
     { bg: "bg-yellow-100", text: "text-yellow-800" },
   ];
 
+  const handleDelete = (id) => {
+    let confirmDelete = confirm("Are you sure you want to delete this note?");
+    if (confirmDelete) {
+      fetch(`http://localhost:5000/note/${id}`, {
+        method: "DELETE",
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`Server responded with ${res.status}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (data.deletedCount) {
+            alert("Note deleted successfully.");
+            // window.location.reload();
+            const remainingNotes = notes.filter((note) => note._id !== id);
+            setNotes(remainingNotes);
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting note:", error);
+          alert("Failed to delete the note. Please try again.");
+        });
+    }
+  };
+
   return (
     <div
       className="bg-white rounded-lg shadow-md p-6 pt-2 border-t-8 break-inside-avoid"
       style={{ borderTopColor: color }}
     >
-        <div className="flex justify-end items-start mb-3 gap-2">
-            <Link to={`/updateNote/${_id}`}><button className="cursor-pointer">📝</button></Link>
-            <button onClick={() => alert('fuck you!')} className="cursor-pointer">🗑️</button>
-        </div>
+      <div className="flex justify-end items-start mb-3 gap-2">
+        <Link to={`/updateNote/${_id}`}>
+          <button className="cursor-pointer">📝</button>
+        </Link>
+        <button onClick={() => handleDelete(_id)} className="cursor-pointer">
+          🗑️
+        </button>
+      </div>
       <div className="flex justify-between items-start mb-2">
         <h3 className="text-xl font-bold text-gray-800">{title}</h3>
         <span

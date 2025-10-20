@@ -108,7 +108,7 @@ const Notes = () => {
       {notes.length === 0 ? (
         <p className="text-center text-gray-500">😔 কোনো নোট পাওয়া যায়নি।</p>
       ) : (
-        notes.map((note, index) => <NoteCard key={index} note={note} />)
+        notes.map((note, index) => <NoteCard key={index} note={note} notes={notes} setNotes={setNotes} />)
       )}
     </div>
   );
