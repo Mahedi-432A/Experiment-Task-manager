@@ -1,7 +1,9 @@
 import React from "react";
+import { Link } from "react-router";
 
 const TaskCard = ({ task }) => {
   const {
+    _id,
     title,
     description,
     priority,
@@ -25,7 +27,7 @@ const TaskCard = ({ task }) => {
 
   return (
     <div
-      className="bg-base-100 shadow-lg rounded-xl border-l-4 p-5 mb-4"
+      className="bg-base-100 shadow-lg rounded-xl border-l-4 p-5 mb-4 break-inside-avoid"
       style={{ borderColor: color }}
     >
       <div className="flex justify-between items-start">
@@ -34,21 +36,13 @@ const TaskCard = ({ task }) => {
         <div className="flex gap-2">
           {reminder && (
             <div title="Reminder set">
-              <span className="text-warning text-lg">
-                ⏳
-              </span>
+              <span className="text-warning text-lg">⏳</span>
             </div>
           )}
-          <button
-            onClick={() => alert("edit !")}
-            title="Edit Task"
-          >
-            📝
-          </button>
-          <button
-            onClick={() => alert("delete !!")}
-            title="Delete Task"
-          >
+          <Link to={`/updateTask/${_id}`}>
+            <button title="Edit Task">📝</button>
+          </Link>
+          <button onClick={() => alert("delete !!")} title="Delete Task">
             🗑️
           </button>
         </div>
@@ -100,23 +94,20 @@ const TaskCard = ({ task }) => {
 
         <div>
           <strong>Category:</strong>{" "}
-          {Array.isArray(category) ?
-           category.map((cat, idx) => (
-            <span key={idx} className="badge badge-outline badge-sm m-1">
-                {cat}
-            </span>
-           ))
-           : category}
+          {Array.isArray(category)
+            ? category.map((cat, idx) => (
+                <span key={idx} className="badge badge-outline badge-sm m-1">
+                  {cat}
+                </span>
+              ))
+            : category}
         </div>
 
         <div>
           <strong>Tags:</strong>{" "}
           {Array.isArray(tags)
             ? tags.map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="badge badge-outline badge-sm m-1"
-                >
+                <span key={idx} className="badge badge-outline badge-sm m-1">
                   {tag}
                 </span>
               ))

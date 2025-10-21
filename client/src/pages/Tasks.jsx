@@ -50,7 +50,7 @@ const Tasks = () => {
           <p>No tasks found. Try adding some tasks!</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="max-w-5xl mx-auto columns-1 md:columns-2 lg:columns-3 space-y-6 gap-6">
           {tasks.map((task) => (
             <TaskCard
               key={task._id}
