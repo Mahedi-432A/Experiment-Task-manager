@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, tasks, setTasks }) => {
   const {
     _id,
     title,
@@ -14,6 +14,27 @@ const TaskCard = ({ task }) => {
     reminder,
     color,
   } = task;
+
+  const handleDelete = (id) => {
+    let confirmDelete = confirm("Are you sure you want to delete this note?");
+    if (confirmDelete) {
+        fetch(`http://localhost:5000/task/${id}`,{
+            method: "DELETE"
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            if(data.deletedCount){
+                alert("Task deleted succesfully /...../");
+                const remainingTasks = tasks.filter((tsk) => tsk._id !== id);
+                setTasks(remainingTasks);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            alert("Failed to delete the task. Please try again.");
+        });
+    }
+  };
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "N/A";
@@ -42,7 +63,7 @@ const TaskCard = ({ task }) => {
           <Link to={`/updateTask/${_id}`}>
             <button title="Edit Task">📝</button>
           </Link>
-          <button onClick={() => alert("delete !!")} title="Delete Task">
+          <button onClick={() => handleDelete(_id)} title="Delete Task">
             🗑️
           </button>
         </div>
