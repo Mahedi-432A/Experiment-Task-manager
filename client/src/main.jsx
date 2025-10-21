@@ -13,6 +13,7 @@ import ProtectedLayout from "./layout/ProtectedLayout.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import AddNotes from "./pages/AddNotes.jsx";
 import UpdateNotes from "./pages/UpdateNotes.jsx";
+import AddTasks from "./pages/AddTasks.jsx";
 
 let router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ let router = createBrowserRouter([
           { path: "/tasks", element: <Tasks></Tasks> },
           { path: "/notes", element: <Notes></Notes> },
           { path: "/addNotes", element: <AddNotes></AddNotes>},
+          { path: "/addTasks", element: <AddTasks></AddTasks>},
           { path: "/updateNote/:id", element: <UpdateNotes></UpdateNotes>},
           // { path: "/dashboard", element: <Dashboard></Dashboard> }
         ],

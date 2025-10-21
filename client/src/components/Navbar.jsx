@@ -55,6 +55,9 @@ const Navbar = () => {
                   <Link to="tasks">Tasks</Link>
                 </li>
                 <li>
+                  <Link to="addTasks">Add Tasks</Link>
+                </li>
+                <li>
                   <Link to="notes">Notes</Link>
                 </li>
                 <li>
@@ -72,6 +75,9 @@ const Navbar = () => {
               <>
                 <li>
                   <Link to="tasks">Tasks</Link>
+                </li>
+                <li>
+                  <Link to="addTasks">Add Tasks</Link>
                 </li>
                 <li>
                   <Link to="notes">Notes</Link>

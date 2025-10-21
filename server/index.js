@@ -51,6 +51,21 @@ async function run() {
       res.send(result);
     });
 
+    // store tasks and manage tasks data
+    app.get("/tasks/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { userEmail: email };
+      const tasks = await taskCollection.find(query).toArray();
+      res.send(tasks);
+    });
+
+    app.post("/tasks", async (req, res) => {
+      const task = req.body;
+      // console.log(task);
+      const result = await taskCollection.insertOne(task);
+      res.send(result);
+    });
+
     // store and manage notes data
     app.get("/notes/:email", async (req, res) => {
       const email = req.params.email;
