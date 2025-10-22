@@ -22,7 +22,7 @@ const UpdateNotes = () => {
 //   console.log("Fetched Form Data:", fetchedFormData);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/note/${id}`)
+    fetch(`https://task-manager-v1-one.vercel.app/note/${id}`)
       .then((res) => res.json())
       .then((data) => {
         // Convert tags array to comma-separated string for the input field
@@ -50,7 +50,7 @@ const UpdateNotes = () => {
 
     // console.log("Updated Note Data to be sent:", updatedNote);
 
-    fetch(`http://localhost:5000/note/${id}`, {
+    fetch(`https://task-manager-v1-one.vercel.app/note/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

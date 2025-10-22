@@ -48,7 +48,7 @@ const AddTasks = () => {
     };
 
     if (userEmail) {
-      fetch("http://localhost:5000/tasks", {
+      fetch("https://task-manager-v1-one.vercel.app/tasks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

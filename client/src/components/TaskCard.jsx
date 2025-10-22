@@ -18,7 +18,7 @@ const TaskCard = ({ task, tasks, setTasks }) => {
   const handleDelete = (id) => {
     let confirmDelete = confirm("Are you sure you want to delete this note?");
     if (confirmDelete) {
-        fetch(`http://localhost:5000/task/${id}`,{
+        fetch(`https://task-manager-v1-one.vercel.app/task/${id}`,{
             method: "DELETE"
         })
         .then((res) => res.json())

@@ -92,7 +92,7 @@ const Notes = () => {
     // ভবিষ্যতে API কল এখানে হবে
     // setNotes(demoData);
     if (email) {
-      fetch(`http://localhost:5000/notes/${email}`)
+      fetch(`https://task-manager-v1-one.vercel.app/notes/${email}`)
         .then((res) => res.json())
         .then((data) => {
           setNotes(data);

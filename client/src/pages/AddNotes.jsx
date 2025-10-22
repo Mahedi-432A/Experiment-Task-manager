@@ -37,7 +37,7 @@ const AddNotes = () => {
     console.log("Form submitted:", processedData);
     // এখানে তুমি formData ব্যাকএন্ডে পাঠাতে পারো
     if (email) {
-      fetch("http://localhost:5000/notes", {
+      fetch("https://task-manager-v1-one.vercel.app/notes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

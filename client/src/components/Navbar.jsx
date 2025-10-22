@@ -12,7 +12,7 @@ const Navbar = () => {
 
   useEffect (() => {
     if (email) {
-      fetch(`http://localhost:5000/user/${email}`)
+      fetch(`https://task-manager-v1-one.vercel.app/user/${email}`)
         .then((res) => res.json())
         .then((data) => {
           setName(data.name);

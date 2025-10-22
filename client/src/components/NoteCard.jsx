@@ -25,7 +25,7 @@ const NoteCard = ({ note, notes, setNotes }) => {
   const handleDelete = (id) => {
     let confirmDelete = confirm("Are you sure you want to delete this note?");
     if (confirmDelete) {
-      fetch(`http://localhost:5000/note/${id}`, {
+      fetch(`https://task-manager-v1-one.vercel.app/note/${id}`, {
         method: "DELETE",
       })
         .then((res) => {

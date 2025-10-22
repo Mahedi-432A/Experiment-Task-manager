@@ -11,7 +11,7 @@ const Tasks = () => {
 
   useEffect(() => {
     if (userEmail) {
-      fetch(`http://localhost:5000/tasks/${userEmail}`)
+      fetch(`https://task-manager-v1-one.vercel.app/tasks/${userEmail}`)
         .then((res) => res.json())
         .then((data) => {
           setTasks(data);

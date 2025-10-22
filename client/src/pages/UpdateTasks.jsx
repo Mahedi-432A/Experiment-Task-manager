@@ -7,7 +7,7 @@ const UpdateTasks = () => {
   const [task, setTask] = useState();
 
   useEffect(() => {
-    fetch(`http://localhost:5000/task/${id}`)
+    fetch(`https://task-manager-v1-one.vercel.app/task/${id}`)
       .then((res) => res.json())
       .then((data) => {
         const tagsString = data.tags ? data.tags.join(", ") : "";
@@ -45,7 +45,7 @@ const UpdateTasks = () => {
         .filter((cat) => cat !== "");
     }
 
-    fetch(`http://localhost:5000/task/${id}`, {
+    fetch(`https://task-manager-v1-one.vercel.app/task/${id}`, {
         method : "PUT",
         headers : {
             "Content-Type": "application/json"

@@ -27,7 +27,7 @@ export default function Register() {
           // console.log("User info to store:", userInfo);
 
           // এখন সার্ভারে ইউজারের ডাটা পাঠানো যাক
-          return fetch("http://localhost:5000/users", {
+          return fetch("https://task-manager-v1-one.vercel.app/users", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
